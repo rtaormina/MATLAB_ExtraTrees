@@ -21,7 +21,7 @@ Copyright 2014 Riccardo Taormina
 Ph.D. Student, Hong Kong Polytechnic University  
 riccardo.taormina@gmail.com 
 
-Acknowledgements Dr. Stefano Galelli, Singapore University of Technology and Design
+Acknowledgements to Dr. Stefano Galelli, Singapore University of Technology and Design
 
 This software is under the GNU General Public License. 
 Please read the text version of the license included with the package (gpl.txt).
