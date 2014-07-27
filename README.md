@@ -1,4 +1,27 @@
-MATLAB_ExtraTrees
-=================
+The MATLAB_ExtraTrees package is a MATLAB implementation of the Extremely Randomized Trees (Extra-Trees)
+proposed by Geurts et al. in 
 
-The MATLAB_ExtraTrees package is a MATLAB implementation of the Extremely Randomized Trees (Extra-Trees) proposed by Geurts et al. (2006)
+ 		Geurts, P., D. Ernst, and L. Wehenkel (2006), Extremely randomized trees, Mach. Learn., 63(1), 3–42
+
+The user is referred to the original publication for details regarding the algorithm. 
+
+Further details can be found in 
+
+		Galelli, S., and A. Castelletti (2013), Assessing the predictive capability of randomized tree-based ensembles 
+ 		in streamflow modelling, Hydrol. Earth Syst. Sci., 17, 2669–2684.
+
+The algorithm also provides the scores (relative variance reduction) associated with each candidate input. 
+These scores can be used to implement the Iterative Input Variale Selection of Galelli and Castelletti proposed in
+
+ 		Galelli, S., and A. Castelletti (2013), Tree-based iterative input variable selection for hydrological modeling, 
+ 		Wate Resour. Res., 49(7), 4295–4310.
+
+
+Copyright 2014 Riccardo Taormina 
+Ph.D. Student, Hong Kong Polytechnic University  
+riccardo.taormina@gmail.com 
+
+Acknowledgements Dr. Stefano Galelli, Singapore University of Technology and Design
+
+This software is under the GNU General Public License. 
+Please read the text version of the license included with the package (gpl.txt).
