@@ -11,10 +11,12 @@ Further details can be found in
  		in streamflow modelling, Hydrol. Earth Syst. Sci., 17, 2669–2684.
 
 The algorithm also provides the scores (relative variance reduction) associated with each candidate input. 
-These scores can be used to implement the Iterative Input Variale Selection of Galelli and Castelletti proposed in
+These scores can be used to implement the Iterative Input variable Selection (IIS) algorithm of Galelli and Castelletti proposed in
 
  		Galelli, S., and A. Castelletti (2013), Tree-based iterative input variable selection for hydrological modeling, 
  		Wate Resour. Res., 49(7), 4295–4310.
+		
+A MATLAB toolbox that uses MATLAB_ExtraTrees to implement the IIS technique can be found at https://github.com/stefano-galelli/MATLAB_IterativeInputSelection
 
 
 Copyright 2014 Riccardo Taormina 
