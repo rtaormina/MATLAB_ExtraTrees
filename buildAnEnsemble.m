@@ -1,4 +1,4 @@
-function [ensemble,output] = buildAnEnsemble(M,K,nmin,data)
+function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data)
 %
 % Builds an ensemble of Extra-Trees and returns the predictions on the 
 % training data set. 
@@ -43,10 +43,12 @@ function [ensemble,output] = buildAnEnsemble(M,K,nmin,data)
 % preallocate memory for trees and predictions
 ensemble = repmat(buildAnExtraTree(),[1,M]);
 calOut   = zeros(size(data,1),M);
+scores   = zeros(size(data,2)-1,M);
+depths   = zeros(1,M);
 
 % build M Extra Trees
 for i = 1 : M
-    [ensemble(i),calOut(:,i)] = buildAnExtraTree(K,nmin,data);  
+    [ensemble(i),calOut(:,i),scores(:,i),depths(i)] = buildAnExtraTree(K,nmin,data);  
 end
 
 % compute output
