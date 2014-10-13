@@ -19,6 +19,9 @@ These scores can be used to implement the Iterative Input variable Selection (II
 A MATLAB toolbox that uses MATLAB_ExtraTrees to implement the IIS technique can be found at https://github.com/stefano-galelli/MATLAB_IterativeInputSelection
 
 
+!!! This software requires the MATLAB Statistical Toolbox. Soon it will be changed so that only the core MATLAB module will be   
+    needed for the execution !!!  
+
 Copyright 2014 Riccardo Taormina 
 Ph.D. Student, Hong Kong Polytechnic University  
 riccardo.taormina@gmail.com 
