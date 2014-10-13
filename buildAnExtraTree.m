@@ -1,4 +1,4 @@
-function [TREE,output,scores] = buildAnExtraTree(K,nmin,data,nodeDepth)
+function [TREE,output,scores,depth] = buildAnExtraTree(K,nmin,data,nodeDepth)
 % 
 % Builds an Extra-Tree recursively and returns the predictions on the 
 % training data set, as well as the scores (relative variance reduction) associated with each candidate input
@@ -58,8 +58,14 @@ if nargin == 0
     TREE.splitAtt  = NaN; TREE.splitVal  = NaN;  
     TREE.score     = NaN;
     TREE.isLeaf    = NaN; TREE.leafValue = NaN;      
-    output = NaN;
-    scores = NaN;
+    TREE.nodeDepth = 0;
+    TREE.nobs = 0;
+    TREE.var  = 0;    
+    TREE.varRed  = 0;
+    TREE.Y       = [];
+    output    = NaN;
+    scores    = NaN;
+    depth     = 0; 
     return
 end
 
@@ -76,22 +82,28 @@ if nargin <=3
     nodeDepth = 1;
     output = zeros(n,1);
     scores = zeros(1,nAtt);
+    depth  = 0;
 end
 
 % check whether the splitting process should be stopped and return a leaf
 % if TRUE. splitting is stopped if n < nmin, or if either all attributes in
 % S or targets in Y are constant (variance <= floating point accuracy eps) 
-if (n < nmin) || (var(Y) <= eps) || (mean(var(S)) <= eps)  
+if (n < nmin) || (var(Y) <= eps) || (mean(var(S)) <= eps) || nodeDepth>99 
     % stop splitting process and return a leaf    
     TREE.child1    = NaN; TREE.child2    = NaN;
     TREE.splitAtt  = NaN; TREE.splitVal  = NaN;  
     TREE.score     = 0;
-    TREE.isLeaf    = 1;   TREE.leafValue = mean(Y);   
+    TREE.isLeaf    = 1;   TREE.leafValue = mean(Y);  
+    TREE.nodeDepth = nodeDepth;
+    TREE.nobs    = numel(Y);
+    TREE.var     = TREE.nobs*var(Y);    
+    TREE.varRed  = 0;
+    TREE.Y       = Y;
     
     % return predictions associated with the leaf
     output = ones(n,1)*mean(Y);
     scores = zeros(1,nAtt);
-    
+    depth  = nodeDepth;
     return
 else
     % split the node
@@ -115,10 +127,10 @@ else
     
     % create the children nodes and compute predictions 
     % on the calibration data set through recursion     
-    [child1,output(ixes),scores1]  = ...
+    [child1,output(ixes),scores1,depth1]  = ...
         buildAnExtraTree(K,nmin,[S1,Y_S1],nodeDepth+1);
-    [child2,output(~ixes),scores2] = ...
-        buildAnExtraTree(K,nmin,[S2,Y_S2],nodeDepth+1);  
+    [child2,output(~ixes),scores2,depth2] = ...
+        buildAnExtraTree(K,nmin,[S2,Y_S2],nodeDepth+1); 
     
     
     % store node 
@@ -126,10 +138,14 @@ else
     TREE.splitAtt  = att_ixes(ix);  TREE.splitVal  = splitValues(ix); 
     TREE.score     = maxScore;
     TREE.isLeaf    = 0;             TREE.leafValue = NaN;  
+    TREE.nodeDepth = nodeDepth;
+    TREE.nobs    = numel(Y);
+    TREE.var     = TREE.nobs*var(Y);    
+    TREE.varRed  = TREE.var - child1.var-child2.var;
+    TREE.Y       = Y;
     
     % update cumulative scores
-    scores = scores1 + scores2;
-    scores(TREE.splitAtt) = scores(TREE.splitAtt) + maxScore;
-    
+    scores = scores1 + scores2;                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    scores(TREE.splitAtt) = scores(TREE.splitAtt) + TREE.varRed;
+    depth = depth1+depth2;
 end
-
