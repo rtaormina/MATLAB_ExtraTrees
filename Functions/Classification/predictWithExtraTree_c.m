@@ -1,24 +1,14 @@
-function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data,problemType,inputType)
+function output = predictWithExtraTree_c(TREE,S)
 %
-% Builds an ensemble of Extra-Trees for regression or classification
-% datasets
-%  
+% This function performs a recursive search within the Extra-Tree
+% and returns the class estimate for each pattern in S.
+%
 % Inputs : 
-% M           = number of trees in the ensemble
-% K           = number of attributes randomly selected at each node
-% nmin        = minimum sample size for splitting a node
-% data        = calibration dataset (targets are in the last column) 
-% problemType = specify problem type (1 for regression, zero for classification)
-% inputType   = binary vector indicating feature type(0:categorical,1:numerical)
-% only include input type for classification problems
+% TREE      = the Extra-Tree
+% split     = dataset of attribute patterns
 % 
-%
 % Outputs : 
-% ensemble  = the ensemble, which is a M-long array of Extra-Tree structs  
-%             (see buildAnExtraTree for the details regarding each field)   
-% output    = predictions of the ensemble on the training data set 
-%
-%
+% output    = output produced by the Extra-Tree for each pattern
 %
 % Copyright 2015 Ahmad Alsahaf
 % Research fellow, Politecnico di Milano
@@ -27,6 +17,7 @@ function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data,problem
 % Copyright 2014 Riccardo Taormina 
 % Ph.D. Student, Hong Kong Polytechnic University  
 % riccardo.taormina@gmail.com 
+%
 %
 % Please refer to README.txt for bibliographical references on Extra-Trees!
 %
@@ -47,9 +38,29 @@ function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data,problem
 
 
 
-if problemType == 0
-    [ensemble,output,scores,depths] = buildAnEnsemble_r(M,K,nmin,data);
-    
+% get dataset length and preallocate memory for the output
+n  = size(S,1);
+output = zeros(n,1);
+
+% return the prediction if the node is a leaf 
+if TREE.isLeaf == 1
+    output = repmat(TREE.leafValue,[n,1]);
+    return
+  
 else
-    [ensemble,output,scores,depths] = buildAnEnsemble_c(M,K,nmin,data,inputType);
+    
+% ... otherwhise continue the search recursively
+if TREE.splitAttIsCategorical == 0
+    splitIxes = S(:,TREE.splitAtt)==TREE.splitVal;
+else 
+    splitIxes = S(:,TREE.splitAtt)>TREE.splitVal;
+end
+    
+    
+    output(splitIxes) = predictWithExtraTree_c(...
+        TREE.child1,S(splitIxes,:));
+    
+    output(~splitIxes) = predictWithExtraTree_c(...
+        TREE.child2,S(~splitIxes,:));
+    end
 end

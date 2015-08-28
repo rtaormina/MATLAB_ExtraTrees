@@ -1,15 +1,20 @@
-function scores = computeScores(Y,split)
+function [output] = predictWithAnEnsemble_c(ensemble,data)
 %
-% This function computes the relative variance reduction score associated
-% with each split on the targets values.
-%
+% Runs an ensemble of Extra-Trees and returns the predictions on the 
+% testing data set. 
+%  
 % Inputs : 
-% Y         = set if target values
-% split     = random split for each selected attribute
+% ensemble  = the ensemble, which is a M-long array of Extra-Tree structs 
+%            (see help on buildAnExtraTree_c.m for the details regarding each field)  
+% data      = testing dataset (just the inputs, no output)
 % 
-% Outputs : 
-% scores    = relative variance reduction associated with each split
 %
+% Outputs :    
+% output    = class predictions of the ensemble on the testing data set
+%
+% Copyright 2015 Ahmad Alsahaf
+% Research fellow, Politecnico di Milano
+% ahmadalsahaf@gmail.com
 %
 % Copyright 2014 Riccardo Taormina 
 % Ph.D. Student, Hong Kong Polytechnic University  
@@ -35,27 +40,16 @@ function scores = computeScores(Y,split)
 %     along with MATLAB_ExtraTrees.  If not, see <http://www.gnu.org/licenses/>.
 %
 
-% get dataset length n and number of attributes nAtt 
-[n,nAtt] = size(split);
 
-% compute target variance for the dataset
-varY    = nanvar(Y);
+% get the number M of trees
+M = size(ensemble,2);
 
-% compute target variance for the two branches
-tempY   = repmat(Y,1,nAtt);
+% preallocate memory for the predictions 
+valOut   = zeros(size(data,1),M);
 
-Y_S1    = tempY; Y_S1(split)  = NaN;
-Y_S2    = tempY; Y_S2(~split) = NaN;
+for i = 1 : M
+     valOut(:,i) = predictWithExtraTree_c(ensemble(i),data);
+end
 
-n_S1    = sum(split);
-n_S2    = n - n_S1;
-
-
-varY_S1 = nanvar(Y_S1);
-varY_S2 = nanvar(Y_S2);
-
-% compute scores
-scores = (varY - n_S1/n.*varY_S1 - ...
-    n_S2/n.*varY_S2)/varY;
-
-
+% compute output
+output = mode(valOut,2);

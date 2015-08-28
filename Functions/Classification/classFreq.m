@@ -1,26 +1,19 @@
-function [ output ] = predictWithExtraTree(TREE,S,problemType)
+function [out, out_single_value] = classFreq( Y )
 %
-% This function performs a recursive search within the Extra-Tree
-% and returns the estimate for each pattern in S.
-%
+% Finds the frequency of classes (categories) within a vector of classes, and returns
+% a frequency table and the most frequent class
+%  
 % Inputs : 
-% TREE        = the Extra-Tree
-% S           = dataset of attribute patterns
-% problemType = specify problem type (1 for regression, zero for classification)
+% Y       = Output of classes 
 % 
-%
-% Outputs : 
-% output    = output produced by the Extra-Tree for each pattern
-%
+% Outputs :    
+% out               = Frequency table of classes within Y
+% out_single value  = The most frequent class in Y
 %
 %
 % Copyright 2015 Ahmad Alsahaf
 % Research fellow, Politecnico di Milano
 % ahmadalsahaf@gmail.com
-%
-% Copyright 2014 Riccardo Taormina 
-% Ph.D. Student, Hong Kong Polytechnic University  
-% riccardo.taormina@gmail.com 
 %
 % Please refer to README.txt for bibliographical references on Extra-Trees!
 %
@@ -40,10 +33,34 @@ function [ output ] = predictWithExtraTree(TREE,S,problemType)
 %     along with MATLAB_ExtraTrees_classification.  If not, see <http://www.gnu.org/licenses/>.
 
 
-if problemType == 0
-    output = predictWithExtraTree_r(TREE,S);
 
-else 
-    output = predictWithExtraTree_c(TREE,S);
-end
+% number of samples
+n = length(Y);
+
+
+%if n == 0                        
+%    out = [NaN NaN NaN];           
+%    out_single_value = NaN(n,1);
+    
+%else
+    yq = sort(unique(Y),'ascend');
+    nq = numel(yq);
+    freqs = zeros(nq,1);
+    for i=1:nq
+        freqs(i) = numel(find(Y==yq(i)));
+    end
+        
+    % full output [class, number of occurances, frequency]  
+    out = [yq freqs freqs/numel(Y)];
+    
+    % single value output 
+    [~,idxMax] = max(out(:,2));
+    out_single_value = out(idxMax,1);
+%end
+
+
+
+
+
+
 

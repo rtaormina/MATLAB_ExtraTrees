@@ -1,22 +1,15 @@
-function [ output ] = predictWithExtraTree(TREE,S,problemType)
+function [split,cps] = generateRandomSplits_r(S)
 %
-% This function performs a recursive search within the Extra-Tree
-% and returns the estimate for each pattern in S.
+% This function generates random splits using the subset of 
+% attributes in S.
 %
 % Inputs : 
-% TREE        = the Extra-Tree
-% S           = dataset of attribute patterns
-% problemType = specify problem type (1 for regression, zero for classification)
+% S         = dataset of randomly selected attributes
 % 
-%
 % Outputs : 
-% output    = output produced by the Extra-Tree for each pattern
+% split     = random split for each selected attribute
+% cps       = cut point for each split
 %
-%
-%
-% Copyright 2015 Ahmad Alsahaf
-% Research fellow, Politecnico di Milano
-% ahmadalsahaf@gmail.com
 %
 % Copyright 2014 Riccardo Taormina 
 % Ph.D. Student, Hong Kong Polytechnic University  
@@ -24,8 +17,10 @@ function [ output ] = predictWithExtraTree(TREE,S,problemType)
 %
 % Please refer to README.txt for bibliographical references on Extra-Trees!
 %
-% This file is part of MATLAB_ExtraTrees
 %
+%
+% This file is part of MATLAB_ExtraTrees.
+% 
 %     MATLAB_ExtraTrees is free software: you can redistribute it and/or modify
 %     it under the terms of the GNU General Public License as published by
 %     the Free Software Foundation, either version 3 of the License, or
@@ -37,13 +32,20 @@ function [ output ] = predictWithExtraTree(TREE,S,problemType)
 %     GNU General Public License for more details.
 % 
 %     You should have received a copy of the GNU General Public License
-%     along with MATLAB_ExtraTrees_classification.  If not, see <http://www.gnu.org/licenses/>.
+%     along with MATLAB_ExtraTrees.  If not, see <http://www.gnu.org/licenses/>.
+%
+
+% get dataset length n and number of attributes nAtt
+[n,nAtt] = size(S);
+
+% get min and max
+minS = min(S); maxS = max(S);
+
+% draw random cut-points
+cps = (maxS-minS).*rand(1,nAtt) + minS;
+
+% perform the split
+split = S > repmat(cps,[n,1]);
 
 
-if problemType == 0
-    output = predictWithExtraTree_r(TREE,S);
-
-else 
-    output = predictWithExtraTree_c(TREE,S);
-end
 

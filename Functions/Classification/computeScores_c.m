@@ -1,16 +1,14 @@
-function [output] = predictWithAnEnsemble(ensemble,data,problemType)
+function scores = computeScores_c(Y,split)
 %
-% Runs an ensemble of Extra-Trees and returns the predictions on the 
-% testing data set. 
-%  
+% This function computes the score
+% with each split on the targets values.
+%
 % Inputs : 
-% ensemble    = the ensemble, which is a M-long array of Extra-Tree structs 
-%            (see help on buildAnExtraTree.m for the details regarding each field)  
-% data        = testing dataset (just the inputs, no output)
-% problemType = specify problem type (1 for regression, zero for classification)
-%
-% Outputs :    
-% output    = class predictions of the ensemble on the testing data set
+% Y         = set if target values
+% split     = random split for each selected attribute
+% 
+% Outputs : 
+% scores    = See bibliography for details
 %
 % Copyright 2015 Ahmad Alsahaf
 % Research fellow, Politecnico di Milano
@@ -40,10 +38,35 @@ function [output] = predictWithAnEnsemble(ensemble,data,problemType)
 
 
 
-if problemType == 0     %regression problem
-    [output] = predictWithAnEnsemble_r(ensemble,data);
+% number of samples and features
+[n, nAtt] = size(split);
 
-else                    %classification problem
-    [output] = predictWithAnEnsemble_c(ensemble,data);
+% H_c(S): the entropy of the output
+h_c = entropy_et(Y);
+
+
+% H_t, I_ct, C_ct: the split entropy, Information gain, and normalized information gain
+C_ct = zeros(1,nAtt);
+
+for i=1:nAtt
+currSplit = split(:,i);
+
+h_t = entropy_et(currSplit);
+y_c1 = Y(find(currSplit)); 
+y_c2 = Y(find(~currSplit));
+h_ct = (numel(y_c1)/n)*entropy_et(y_c1) + (numel(y_c2)/n)*entropy_et(y_c2);
+I_ct = h_c - h_ct;
+C_ct(i) = 2*I_ct/(h_c+h_t);  
+
 end
+
+scores = C_ct;
+scores(find(isnan(scores)))=0;
+
+
+
+
+
+
+
 

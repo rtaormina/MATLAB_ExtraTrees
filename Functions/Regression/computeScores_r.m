@@ -1,14 +1,14 @@
-function [split,cps] = generateRandomSplits(S)
+function scores = computeScores_r(Y,split)
 %
-% This function generates random splits using the subset of 
-% attributes in S.
+% This function computes the relative variance reduction score associated
+% with each split on the targets values.
 %
 % Inputs : 
-% S         = dataset of randomly selected attributes
+% Y         = set if target values
+% split     = random split for each selected attribute
 % 
 % Outputs : 
-% split     = random split for each selected attribute
-% cps       = cut point for each split
+% scores    = relative variance reduction associated with each split
 %
 %
 % Copyright 2014 Riccardo Taormina 
@@ -35,17 +35,27 @@ function [split,cps] = generateRandomSplits(S)
 %     along with MATLAB_ExtraTrees.  If not, see <http://www.gnu.org/licenses/>.
 %
 
-% get dataset length n and number of attributes nAtt
-[n,nAtt] = size(S);
+% get dataset length n and number of attributes nAtt 
+[n,nAtt] = size(split);
 
-% get min and max
-minS = min(S); maxS = max(S);
+% compute target variance for the dataset
+varY    = nanvar(Y);
 
-% draw random cut-points
-cps = (maxS-minS).*rand(1,nAtt) + minS;
+% compute target variance for the two branches
+tempY   = repmat(Y,1,nAtt);
 
-% perform the split
-split = S > repmat(cps,[n,1]);
+Y_S1    = tempY; Y_S1(split)  = NaN;
+Y_S2    = tempY; Y_S2(~split) = NaN;
 
+n_S1    = sum(split);
+n_S2    = n - n_S1;
+
+
+varY_S1 = nanvar(Y_S1);
+varY_S2 = nanvar(Y_S2);
+
+% compute scores
+scores = (varY - n_S1/n.*varY_S1 - ...
+    n_S2/n.*varY_S2)/varY;
 
 

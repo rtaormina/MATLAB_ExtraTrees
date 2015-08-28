@@ -1,3 +1,5 @@
+"Update August, 2015: The toolbox can now implement Extra-Trees for classification problems as well as regression problems"
+
 The MATLAB_ExtraTrees package is a MATLAB implementation of the Extremely Randomized Trees (Extra-Trees)
 proposed by Geurts et al. in 
 

@@ -1,6 +1,6 @@
 % 
 % This is a demo script that shows how to use the MATLAB_ExtraTrees toolbox
-% on an example dataset.
+% on an example dataset for a regreesion problem.
 % 
 %
 % Copyright 2014 Riccardo Taormina 
@@ -51,10 +51,10 @@ nmin =  5;  % Minimum number of points for each leaf
 
 % Build an ensemble of Extra-Trees and return the predictions on the
 % training dataset.
-[ensemble,trData.YHAT] = buildAnEnsemble(M,k,nmin,[trData.X,trData.Y]);
+[ensemble,trData.YHAT] = buildAnEnsemble(M,k,nmin,[trData.X,trData.Y],0);
 
 % Run the ensemble on a validation dataset
-valData.YHAT = predictWithAnEnsemble(ensemble,[valData.X,valData.Y]);
+valData.YHAT = predictWithAnEnsemble(ensemble,[valData.X,valData.Y],0);
 
 % Plot the results
 figure;

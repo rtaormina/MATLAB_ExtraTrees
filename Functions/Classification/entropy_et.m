@@ -1,26 +1,17 @@
-function [ output ] = predictWithExtraTree(TREE,S,problemType)
+function [ entropy ] = entropy_et(Y)
 %
-% This function performs a recursive search within the Extra-Tree
-% and returns the estimate for each pattern in S.
-%
+% Finds the Shannon entropy of a vector of classes
+%  
 % Inputs : 
-% TREE        = the Extra-Tree
-% S           = dataset of attribute patterns
-% problemType = specify problem type (1 for regression, zero for classification)
+% Y       = vector of classes 
 % 
-%
-% Outputs : 
-% output    = output produced by the Extra-Tree for each pattern
-%
+% Outputs :    
+% entropy = Shannon entropy of Y
 %
 %
 % Copyright 2015 Ahmad Alsahaf
 % Research fellow, Politecnico di Milano
 % ahmadalsahaf@gmail.com
-%
-% Copyright 2014 Riccardo Taormina 
-% Ph.D. Student, Hong Kong Polytechnic University  
-% riccardo.taormina@gmail.com 
 %
 % Please refer to README.txt for bibliographical references on Extra-Trees!
 %
@@ -40,10 +31,18 @@ function [ output ] = predictWithExtraTree(TREE,S,problemType)
 %     along with MATLAB_ExtraTrees_classification.  If not, see <http://www.gnu.org/licenses/>.
 
 
-if problemType == 0
-    output = predictWithExtraTree_r(TREE,S);
+% number of elements in Y, classes in Y, and the number of classes.
+n = numel(Y);
+classes = unique(Y);
+nc = numel(classes);
 
-else 
-    output = predictWithExtraTree_c(TREE,S);
+%initialize the entropy
+entropy = 0;             
+
+for i=1:nc
+    no = numel(find(Y==classes(i)));             %number of occurances of current class
+    entropy = entropy - (no/n)*log2(no/n);       %update entropy
 end
+
+
 
