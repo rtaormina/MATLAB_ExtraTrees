@@ -24,6 +24,10 @@ A MATLAB toolbox that uses MATLAB_ExtraTrees to implement the IIS technique can 
 !!! This software requires the MATLAB Statistical Toolbox. Soon it will be changed so that only the core MATLAB module will be   
     needed for the execution !!!  
 
+Copyright 2015 Ahmad Alsahaf 
+Research fellow, Politecnico di Milano 
+ahmadalsahaf@gmail.com 
+
 Copyright 2014 Riccardo Taormina 
 Ph.D. Student, Hong Kong Polytechnic University  
 riccardo.taormina@gmail.com 
