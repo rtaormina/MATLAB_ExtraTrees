@@ -1,11 +1,12 @@
-function scores = computeScores_c(Y,split)
+function scores = computeScores_c(Y,split,sampleWeights)
 %
 % This function computes the score
 % with each split on the targets values.
 %
 % Inputs : 
-% Y         = set if target values
-% split     = random split for each selected attribute
+% Y             = set if target values
+% split         = random split for each selected attribute
+% sampleWeights = weights of the samples (used for IterativeInputSelection)
 % 
 % Outputs : 
 % scores    = See bibliography for details
@@ -42,7 +43,7 @@ function scores = computeScores_c(Y,split)
 [n, nAtt] = size(split);
 
 % H_c(S): the entropy of the output
-h_c = entropy_et(Y);
+h_c = entropy_et(Y,sampleWeights);
 
 
 % H_t, I_ct, C_ct: the split entropy, Information gain, and normalized information gain
@@ -51,10 +52,12 @@ C_ct = zeros(1,nAtt);
 for i=1:nAtt
 currSplit = split(:,i);
 
-h_t = entropy_et(currSplit);
-y_c1 = Y(find(currSplit)); 
-y_c2 = Y(find(~currSplit));
-h_ct = (numel(y_c1)/n)*entropy_et(y_c1) + (numel(y_c2)/n)*entropy_et(y_c2);
+h_t = entropy_et(currSplit,sampleWeights);
+idx_c1 = find(currSplit);     y_c1 = Y(idx_c1);   weight1 = sum(sampleWeights(idx_c1));
+idx_c2 = find(~currSplit);    y_c2 = Y(idx_c2);   weight2 = sum(sampleWeights(idx_c2));
+sumW = sum(sampleWeights);
+
+h_ct = (weight1/sumW)*entropy_et(y_c1,sampleWeights(idx_c1)) + (weight2/sumW)*entropy_et(y_c2,sampleWeights(idx_c2));
 I_ct = h_c - h_ct;
 C_ct(i) = 2*I_ct/(h_c+h_t);  
 

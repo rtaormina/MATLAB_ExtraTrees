@@ -1,15 +1,16 @@
-function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data,problemType,inputType)
+function [ensemble,output,scores,depths] = buildAnEnsemble(M,K,nmin,data,problemType,inputType,sampleWeights)
 %
 % Builds an ensemble of Extra-Trees for regression or classification
 % datasets
 %  
 % Inputs : 
-% M           = number of trees in the ensemble
-% K           = number of attributes randomly selected at each node
-% nmin        = minimum sample size for splitting a node
-% data        = calibration dataset (targets are in the last column) 
-% problemType = specify problem type (1 for regression, zero for classification)
-% inputType   = binary vector indicating feature type(0:categorical,1:numerical)
+% M             = number of trees in the ensemble
+% K             = number of attributes randomly selected at each node
+% nmin          = minimum sample size for splitting a node
+% data          = calibration dataset (targets are in the last column) 
+% problemType   = specify problem type (1 for regression, zero for classification)
+% inputType     = binary vector indicating feature type(0:categorical,1:numerical)
+% sampleWeights = weights of the samples (used for IterativeInputSelection)
 % only include input type for classification problems
 % 
 %
@@ -51,5 +52,5 @@ if problemType == 0
     [ensemble,output,scores,depths] = buildAnEnsemble_r(M,K,nmin,data);
     
 else
-    [ensemble,output,scores,depths] = buildAnEnsemble_c(M,K,nmin,data,inputType);
+    [ensemble,output,scores,depths] = buildAnEnsemble_c(M,K,nmin,data,inputType,sampleWeights);
 end

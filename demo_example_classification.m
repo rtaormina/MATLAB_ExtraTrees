@@ -59,7 +59,7 @@ nmin = 2;         % minimum sample size for splitting a node
 problemType = 1;  % classification problem
 
 
-[ensemble,output,scores,depths] = buildAnEnsemble(M, K,nmin,trainSet,problemType,inputType);
+[ensemble,output,scores,depths] = buildAnEnsemble(M, K,nmin,trainSet,problemType,inputType,[]);
 
 
 

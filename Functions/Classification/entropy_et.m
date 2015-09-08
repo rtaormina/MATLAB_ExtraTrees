@@ -1,9 +1,10 @@
-function [ entropy ] = entropy_et(Y)
+function [ entropy ] = entropy_et(Y,sampleWeights)
 %
 % Finds the Shannon entropy of a vector of classes
 %  
 % Inputs : 
-% Y       = vector of classes 
+% Y             = vector of classes 
+% sampleWeights = weights of the samples (used for IterativeInputSelection) 
 % 
 % Outputs :    
 % entropy = Shannon entropy of Y
@@ -32,16 +33,21 @@ function [ entropy ] = entropy_et(Y)
 
 
 % number of elements in Y, classes in Y, and the number of classes.
-n = numel(Y);
+%n = numel(Y);
 classes = unique(Y);
 nc = numel(classes);
+n = sum(sampleWeights);
 
 %initialize the entropy
 entropy = 0;             
 
 for i=1:nc
-    no = numel(find(Y==classes(i)));             %number of occurances of current class
-    entropy = entropy - (no/n)*log2(no/n);       %update entropy
+    %no = numel(find(Y==classes(i)));             %number of occurances of current class
+    idx = find(Y==classes(i));                    %index of weights associayed with current class
+    no = sum(sampleWeights(idx));                 %sum of the weights of the class
+    entropy = entropy - (no/n)*log2(no/n);        %update entropy
+   
+  
 end
 
 

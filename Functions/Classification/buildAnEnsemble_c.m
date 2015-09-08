@@ -1,14 +1,16 @@
-function [ensemble,output,scores,depths] = buildAnEnsemble_c(M,K,nmin,data,inputType)
+
+function [ensemble,output,scores,depths] = buildAnEnsemble_c(M,K,nmin,data,inputType,sampleWeights)
 %
 % Builds an ensemble of Extra-Trees and returns the class predictions on the 
 % training data set. 
 %  
 % Inputs : 
-% M         = number of trees in the ensemble
-% K         = number of attributes randomly selected at each node
-% nmin      = minimum sample size for splitting a node
-% data      = calibration dataset (targets are in the last column) 
-% inputType = binary vector indicating feature type (0:categorical, 1:numerical)
+% M             = number of trees in the ensemble
+% K             = number of attributes randomly selected at each node
+% nmin          = minimum sample size for splitting a node
+% data          = calibration dataset (targets are in the last column) 
+% inputType     = binary vector indicating feature type (0:categorical, 1:numerical)
+% sampleWeights = weights of the samples (used for IterativeInputSelection)
 % 
 %
 % Outputs : 
@@ -53,7 +55,7 @@ depths   = zeros(1,M);
 
 % build M Extra Trees
 for i = 1 : M
-    [ensemble(i),calOut(:,i),scores(:,i),depths(i)] = buildAnExtraTree_c(K,nmin,data,inputType);  
+    [ensemble(i),calOut(:,i),scores(:,i),depths(i)] = buildAnExtraTree_c(K,nmin,data,inputType,sampleWeights);  
 end
 
 % compute output (most frequently predicted class over the ensemble)

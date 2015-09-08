@@ -1,16 +1,17 @@
-function [TREE,output,scores,depth] = buildAnExtraTree(K,nmin,data,nodeDepth,problemType,inputType)
+function [TREE,output,scores,depth] = buildAnExtraTree(K,nmin,data,nodeDepth,problemType,inputType,sampleWeights)
 % 
 % Builds an Extra-Tree recursively and returns the predictions (or class prediction) on the 
 % training data set, as well as the scores associated with each candidate input
 %  
 % Inputs : 
-% K           = number of attributes randomly selected at each node
-% nmin        = minimum sample size for splitting a node
-% data        = calibration dataset (targets are in the last column) 
-% nodeDepth   = depth of the current node 
-% problemType = specify problem type (1 for regression, zero for classification)
-% inputType   = binary vector indicating feature type (0:categorical, 1:numerical)
-% use 
+% K             = number of attributes randomly selected at each node
+% nmin          = minimum sample size for splitting a node
+% data          = calibration dataset (targets are in the last column) 
+% nodeDepth     = depth of the current node 
+% problemType   = specify problem type (1 for regression, zero for classification)
+% inputType     = binary vector indicating feature type (0:categorical, 1:numerical)
+% sampleWeights = weights of the samples (used for IterativeInputSelection)
+% only include input type for classification problems
 %
 % Omit all inputs to preallocate memory. The parameter nodeDepth should be omitted 
 % when calling the function from the main script, and it is used only when the function calls itself. 
@@ -66,6 +67,6 @@ if problemType == 0
     [TREE,output,scores,depth] = buildAnExtraTree_r(K,nmin,data,nodeDepth)
     
 else
-    [TREE,output,scores,depth] = buildAnExtraTree_c(K,nmin,data,inputType,nodeDepth)
+    [TREE,output,scores,depth] = buildAnExtraTree_c(K,nmin,data,inputType,sampleWeights,nodeDepth)
 end 
     
