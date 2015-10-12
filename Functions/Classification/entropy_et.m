@@ -34,7 +34,7 @@ function [ entropy ] = entropy_et(Y,sampleWeights)
 
 % number of elements in Y, classes in Y, and the number of classes.
 %n = numel(Y);
-classes = unique(Y);
+classes = unique_f(Y);
 nc = numel(classes);
 n = sum(sampleWeights);
 
@@ -43,12 +43,10 @@ entropy = 0;
 
 for i=1:nc
     %no = numel(find(Y==classes(i)));             %number of occurances of current class
-    idx = find(Y==classes(i));                    %index of weights associayed with current class
+    idx = Y==classes(i);                          %index of weights associayed with current class
     no = sum(sampleWeights(idx));                 %sum of the weights of the class
     entropy = entropy - (no/n)*log2(no/n);        %update entropy
    
   
 end
-
-
 

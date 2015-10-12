@@ -43,7 +43,7 @@ n = length(Y);
 %    out_single_value = NaN(n,1);
     
 %else
-    yq = sort(unique(Y),'ascend');
+    yq = sort(unique_f(Y),'ascend');
     nq = numel(yq);
     freqs = zeros(nq,1);
     for i=1:nq

@@ -39,8 +39,8 @@ function [split,splitValues] = generateRandomSplits_c(S, inputType)
  
 
 % separate categorical from numerical features
-S1 = S(:,find(inputType));
-S2 = S(:,find(~inputType));
+S1 = S(:,inputType);
+S2 = S(:,~inputType);
  
 % number of samples and features
 [n,nAtt1] = size(S1);
@@ -62,13 +62,13 @@ rss = datasample(S2,min(1,numel(S2)));
 % perform the split for both types of attributes
 split = zeros(size(S));
 if ~isnan(S1)
-split(:,find(inputType)) = S1 > repmat(cps,[n,1]);
+split(:,inputType) = S1 > repmat(cps,[n,1]);
 end
 if ~isnan(S2)
-split(:,find(~inputType)) = S2 == repmat(rss,[n,1]);
+split(:,~inputType) = S2 == repmat(rss,[n,1]);
 end
  
 % split values
 splitValues = zeros(1,nAtt1+nAtt2);
-splitValues(find(inputType)) = cps; 
-splitValues(find(~inputType)) = rss; 
+splitValues(inputType) = cps; 
+splitValues(~inputType) = rss; 

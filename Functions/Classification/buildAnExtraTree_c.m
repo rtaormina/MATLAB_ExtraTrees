@@ -106,7 +106,7 @@ end
     [maxScore,ix] = max(splitScores);
     
     
-if (n < nmin) || (numel(unique(Y)) <= 1) || (var(split(:,ix))<=eps) || (nodeDepth>99)  
+if (n < nmin) || (numel(unique_f(Y)) <= 1) || (var(split(:,ix))<=eps) || (nodeDepth>99)  
     % stop splitting process and return a leaf    
     TREE.child1    = NaN; TREE.child2    = NaN;
     TREE.splitAtt  = NaN; TREE.splitVal  = NaN;  TREE.splitAttIsCategorical = NaN; 

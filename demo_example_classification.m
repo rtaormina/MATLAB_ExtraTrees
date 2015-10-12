@@ -36,6 +36,7 @@ clc
 
 data = importdata('arrhythmia.mat');
 inputType = importdata('arrhythmia_inputType.mat');
+inputType = logical(inputType);
 
 % The dataset contains a mix of continous and categorical attributes
 % inputType indicates the type
@@ -82,7 +83,7 @@ classNames = {'Neg','Pos1','Pos2','Pos3','Pos4','Pos5',...
     'Pos12','Pos13','Pos14','Pos15'};
 
 realOutput = testSet(:,end);
-presentClasses = unique(realOutput);
+presentClasses = unique_f(realOutput);
 
 classNum = zeros(numel(presentClasses,1));
 classCorr = zeros(numel(presentClasses,1));
